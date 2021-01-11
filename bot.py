@@ -97,6 +97,7 @@ def dark(update: Update, context: CallbackContext) -> int:
 def inlinequery(update: Update, context: CallbackContext) -> None:
     """Handle the inline query."""
     inline_message = update.inline_query.query
+    logger.info("User %s inline the conversation.", inline_message)
     update.inline_query.answer("con cac")
 
 def taser(update: Update, context: CallbackContext) -> None:
