@@ -20,7 +20,8 @@ bot.
 import logging
 
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
-from telegram.ext import Updater, CommandHandler, InlineQueryHandler, MessageHandler, Filters, CallbackContext, ConversationHandler
+from telegram.ext import Updater, CommandHandler, InlineQueryHandler, MessageHandler, Filters, CallbackContext, \
+    ConversationHandler, PollAnswerHandler
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -37,6 +38,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 BLAME, DARK, LOCATION, BIO = range(4)
+
+UPDATE_ID = None
 
 # Define a few command handlers. These usually take the two arguments update and
 # context. Error handlers also receive the raised TelegramError object in error.
@@ -96,6 +99,26 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
     inline_message = update.inline_query.query
     update.inline_query.answer("con cac")
 
+def taser(update: Update, context: CallbackContext) -> None:
+    """Sends a predefined poll"""
+    questions = ["Có", "không...à mà có", "!!Có", "!Không"]
+    message = context.bot.send_poll(
+        update.effective_chat.id,
+        "Chích điện Hòa 15p, ok ko ?",
+        questions,
+        is_anonymous=True,
+        allows_multiple_answers=False,
+    )
+    # Save some info about the poll the bot_data for later use in receive_poll_answer
+    payload = {
+        message.poll.id: {
+            "questions": questions,
+            "message_id": message.message_id,
+            "chat_id": update.effective_chat.id,
+            "answers": 0,
+        }
+    }
+    context.bot_data.update(payload)
 
 def main():
     """Start the bot."""
@@ -116,6 +139,7 @@ def main():
 
     # on different commands - answer in Telegram
     dispatcher.add_handler(CommandHandler("start", start))
+    dispatcher.add_handler(CommandHandler('taser', taser))
     dispatcher.add_handler(CommandHandler("help", help_command))
 
     # on noncommand i.e message - echo the message on Telegram
