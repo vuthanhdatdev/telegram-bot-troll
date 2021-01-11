@@ -20,7 +20,7 @@ bot.
 import logging
 
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, ConversationHandler
+from telegram.ext import Updater, CommandHandler, InlineQueryHandler, MessageHandler, Filters, CallbackContext, ConversationHandler
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -83,12 +83,18 @@ def cancel(update: Update, context: CallbackContext) -> int:
     return ConversationHandler.END
 
 def dark(update: Update, context: CallbackContext) -> int:
-
+    user = update.message.from_user
+    logger.info("User %s started the conversation.", user.first_name)
     update.message.reply_text(
         'mở kèo máu ko @duehoa1211'
     )
 
     return DARK
+
+def inlinequery(update: Update, context: CallbackContext) -> None:
+    """Handle the inline query."""
+    inline_message = update.inline_query.query
+    update.inline_query.answer("con cac")
 
 
 def main():
@@ -115,7 +121,8 @@ def main():
     # on noncommand i.e message - echo the message on Telegram
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
     dispatcher.add_handler(conv_handler)
-
+    # on noncommand i.e message - echo the message on Telegram
+    dispatcher.add_handler(InlineQueryHandler(inlinequery))
     # Start the Bot
     updater.start_polling()
 
