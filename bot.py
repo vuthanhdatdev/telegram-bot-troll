@@ -18,7 +18,7 @@ bot.
 """
 
 import logging
-
+import random
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
 from telegram.ext import Updater, CommandHandler, InlineQueryHandler, MessageHandler, Filters, CallbackContext, \
     ConversationHandler, PollAnswerHandler
@@ -55,6 +55,10 @@ def help_command(update: Update, context: CallbackContext) -> None:
 
 def echo(update: Update, context: CallbackContext) -> None:
     """Echo the user message."""
+    default_text = [
+        'chích điện ko @duehoa1211',
+        "@duehoa1211 sủa clgt??"
+    ]
     # mai tao dạy mày chửi @duehoa1211 tiếp nha
     user_message = update.message.text.strip().lower()
     if update.message.text.strip().lower() == 'mai tao dạy mày chửi @duehoa1211 tiếp nha':
@@ -63,8 +67,12 @@ def echo(update: Update, context: CallbackContext) -> None:
         update.message.reply_text("cc có rất nhiều ý nghĩa ý giáo sư đan đề cập là coin card, con cack, hay 59")
     elif user_message == 'dkm' or user_message == 'dcm':
         update.message.reply_text("không làm mẹ, ok ?")
+    elif user_message == 'vai lon':
+        update.message.reply_text("vai lon @duehoa1211")
+    elif user_message == 'lao ca cho' or user_message == 'láo cá chó':
+        update.message.reply_text(" tao có súng tao bắn mày à @duehoa1211")
     else:
-        update.message.reply_text("@duehoa1211 sủa clgt??")
+        update.message.reply_text(random.choice(default_text))
 
 def blame(update: Update, context: CallbackContext) -> int:
     user = update.message.from_user
@@ -87,7 +95,7 @@ def cancel(update: Update, context: CallbackContext) -> int:
 
 def dark(update: Update, context: CallbackContext) -> int:
     user = update.message.from_user
-    logger.info("User %s started the conversation.", user.first_name)
+    logger.info("User %s dark the conversation.", user.first_name)
     update.message.reply_text(
         'mở kèo máu ko @duehoa1211'
     )
@@ -98,7 +106,10 @@ def inlinequery(update: Update, context: CallbackContext) -> None:
     """Handle the inline query."""
     inline_message = update.inline_query.query
     logger.info("User %s inline the conversation.", inline_message)
-    update.inline_query.answer("con cac")
+    update.message.reply_text(
+        'mở kèo máu ko @duehoa1211'
+    )
+    #update.inline_query.answer("con cac")
 
 def taser(update: Update, context: CallbackContext) -> None:
     """Sends a predefined poll"""
@@ -128,13 +139,12 @@ def main():
     # Post version 12 this will no longer be necessary
     updater = Updater(token, use_context=True)
 
-    conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('dark', dark)],
-        states={
-            BLAME: [MessageHandler(Filters.regex('^(dmm|dkm)/i$'), blame)],
-        },
-        fallbacks=[CommandHandler('cancel', cancel)],
-    )
+    # conv_handler = ConversationHandler(
+    #     entry_points=[CommandHandler('dark', dark)],
+    #     states={
+    #     },
+    #     fallbacks=[CommandHandler('cancel', cancel)],
+    # )
     # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher
 
@@ -145,7 +155,7 @@ def main():
 
     # on noncommand i.e message - echo the message on Telegram
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
-    dispatcher.add_handler(conv_handler)
+    dispatcher.add_handler(CommandHandler('dark', dark))
     # on noncommand i.e message - echo the message on Telegram
     dispatcher.add_handler(InlineQueryHandler(inlinequery))
     # Start the Bot
