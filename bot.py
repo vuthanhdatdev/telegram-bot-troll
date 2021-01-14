@@ -132,6 +132,27 @@ def taser(update: Update, context: CallbackContext) -> None:
     }
     context.bot_data.update(payload)
 
+def pig_brain(update: Update, context: CallbackContext) -> None:
+    """Sends a predefined poll"""
+    questions = ["Có", "không...à mà có", "!!Có", "!Không"]
+    message = context.bot.send_poll(
+        update.effective_chat.id,
+        "óc heo ko, óc heo chứ đéo phải siêu phẩm nha?",
+        questions,
+        is_anonymous=True,
+        allows_multiple_answers=False,
+    )
+    # Save some info about the poll the bot_data for later use in receive_poll_answer
+    payload = {
+        message.poll.id: {
+            "questions": questions,
+            "message_id": message.message_id,
+            "chat_id": update.effective_chat.id,
+            "answers": 0,
+        }
+    }
+    context.bot_data.update(payload)
+
 def main():
     """Start the bot."""
     # Create the Updater and pass it your bot's token.
@@ -151,6 +172,7 @@ def main():
     # on different commands - answer in Telegram
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler('taser', taser))
+    dispatcher.add_handler(CommandHandler('pig_brain', pig_brain))
     dispatcher.add_handler(CommandHandler("help", help_command))
 
     # on noncommand i.e message - echo the message on Telegram
