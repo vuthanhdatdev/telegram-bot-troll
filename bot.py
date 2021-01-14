@@ -134,7 +134,7 @@ def taser(update: Update, context: CallbackContext) -> None:
 
 def pig_brain(update: Update, context: CallbackContext) -> None:
     """Sends a predefined poll"""
-    questions = ["Có", "không...à mà có", "!!Có", "!Không"]
+    questions = ["Có", "không...à mà có", "ăn chích điện thôi"]
     message = context.bot.send_poll(
         update.effective_chat.id,
         "óc heo ko, óc heo chứ đéo phải siêu phẩm nha?",
