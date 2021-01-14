@@ -173,6 +173,7 @@ def main():
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler('taser', taser))
     dispatcher.add_handler(CommandHandler('pig_brain', pig_brain))
+    dispatcher.add_handler(CommandHandler('ocheo', pig_brain))
     dispatcher.add_handler(CommandHandler("help", help_command))
 
     # on noncommand i.e message - echo the message on Telegram
