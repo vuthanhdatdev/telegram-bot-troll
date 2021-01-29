@@ -94,10 +94,15 @@ def cancel(update: Update, context: CallbackContext) -> int:
     return ConversationHandler.END
 
 def dark(update: Update, context: CallbackContext) -> int:
+    default_text = [
+        'đi đồng đen ko @duehoa1211',
+        "mở kèo máu ko @duehoa1211",
+        "tao cho mày đi vũng tàu bây giờ @duehoa1211"
+    ]
     user = update.message.from_user
     logger.info("User %s dark the conversation.", user.first_name)
     update.message.reply_text(
-        'mở kèo máu ko @duehoa1211'
+        random.choice(default_text)
     )
 
     return DARK
